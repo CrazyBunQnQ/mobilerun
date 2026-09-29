@@ -416,7 +416,11 @@ def _configure_advanced_settings(
             ),
             SelectChoice(
                 value="timeout",
-                label=f"Workflow timeout ({config.agent.timeout}s)",
+                label=(
+                    f"Workflow timeout ({config.agent.timeout}s)"
+                    if config.agent.timeout
+                    else "Workflow timeout (none)"
+                ),
             ),
             SelectChoice(
                 value="temperature",

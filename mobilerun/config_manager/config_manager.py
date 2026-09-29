@@ -137,7 +137,16 @@ class AgentConfig:
     # raises `Operation timed out after N seconds`. Surface this through
     # `mobilerun configure → Advanced settings` so users can raise it
     # for long-running tasks without editing the YAML by hand.
+    # ``0`` means "no timeout"; the CLI normalizes it to ``None`` before
+    # constructing the agent, because the workflow runtime treats ``0`` as
+    # "time out immediately" and only ``None`` disables the deadline.
     timeout: int = 1000
+
+    def resolve_timeout(self) -> Optional[float]:
+        """Return the workflow timeout in seconds, or ``None`` for no limit."""
+        if self.timeout is None or self.timeout <= 0:
+            return None
+        return self.timeout
 
     fast_agent: FastAgentConfig = field(default_factory=FastAgentConfig)
     manager: ManagerConfig = field(default_factory=ManagerConfig)
